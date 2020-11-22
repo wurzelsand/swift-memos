@@ -64,3 +64,32 @@ Welche Möglichkeiten gibt es, den *Retain-Cycle* aufzulösen?
       }
   }
   ```
+  
+## Diskussion
+  
+`self` in einem Closure erzeugt nur dann ein *Retain Cycle*, wenn das Objekt eine Referenz auf das Closure speichert. Im folgenden gibt es daher kein *Retain Cycle*:
+  
+```swift
+import Foundation
+
+class Person {
+    var sentence: String = "Hello!"
+    func speak() {
+        DispatchQueue.main.async {
+            print(self.sentence)
+        }
+    }
+    
+    deinit {
+        print("deinit")
+    }
+}
+
+do {
+    let peter = Person()
+    peter.sentence = "Bye!"
+    peter.speak()
+}
+
+RunLoop.main.run(until: .distantFuture)
+```
