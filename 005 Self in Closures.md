@@ -74,9 +74,11 @@ import Foundation
 
 class Person {
     var sentence: String = "Hello!"
+    
     func speak() {
-        DispatchQueue.main.async {
+        DispatchQueue.global(qos: .default).async {
             print(self.sentence)
+            dispatchGroup.leave()
         }
     }
     
@@ -85,11 +87,12 @@ class Person {
     }
 }
 
+let dispatchGroup = DispatchGroup()
+dispatchGroup.enter()
 do {
     let peter = Person()
     peter.sentence = "Bye!"
     peter.speak()
 }
-
-RunLoop.main.run(until: .distantFuture)
+dispatchGroup.wait()
 ```
