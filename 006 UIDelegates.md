@@ -1,6 +1,6 @@
 # UIDelegates
 
-Ein beliebtes Muster in UIKit sind Delegates. Wenn wir beispielsweise eine Klasse von *UICollectionViewController* ableiten, können wir zwar eine Reihe von Methoden überschreiben. z. B. teilen wir durch das Überschreiben von `numberOfSections(in collectionView: UICollectionView)` dem Controller mit, aus wie vielen Sektoren unser *UICollectionView* bestehen soll. Andere Funktionen des *UICollectionViewControllers* werden aber erst nach dem Adaptieren des *UICollectionViewDelegateFlowLayout*-Interface einstellbar, z. B. das Setzen der Zellengröße. Dabei müssen wir nicht einmal das Delegate selber setzen. Ausreichend ist die bloße Deklaration:
+Ein beliebtes Muster in UIKit sind Delegates. Wenn wir beispielsweise eine Klasse von *UICollectionViewController* ableiten, können wir zwar eine Reihe von Methoden überschreiben. z. B. teilen wir durch das Überschreiben von `numberOfSections(in collectionView: UICollectionView)` dem Controller mit, aus wie vielen Sektoren unser *UICollectionView* bestehen soll. Andere Funktionen des *UICollectionViewControllers* können wir aber erst nach dem Adaptieren des *UICollectionViewDelegateFlowLayout*-Interfaces beeinflussen, z. B. das Setzen der Zellengröße. Dabei müssen wir nicht einmal dem Delegate ein Objekt zuordnen. Ausreichend ist die bloße Deklaration und schon sind alle Instanzen automatisch auch Empfänger der Delegate-Methoden:
 
 ```swift
 class MyCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {...}
