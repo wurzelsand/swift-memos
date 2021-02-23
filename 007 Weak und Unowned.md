@@ -93,3 +93,7 @@ func trip() {                           // (0)  0  | (0)  0   -> enter function
                                         // (1)  0  | (1)  0
 trip()
 ```
+
+## Diskussion
+
+* `weak` Objekte müssen immer optional sein. `unowned` Objekte können optional sein, sind es aber in der Regel nicht.
