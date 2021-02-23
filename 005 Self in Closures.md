@@ -189,3 +189,5 @@ do {
     canvasViewController.renderPreviewImage()
 }
 ```
+
+Wenn wir also eine Methode einer Instanzvariablen unserer Klasse aufrufen und ihr ein Closure mit `self` als Parameter übergeben, muss dieses `self` `weak` oder `unowned` sein.
