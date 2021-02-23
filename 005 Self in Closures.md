@@ -150,7 +150,7 @@ do {
 }
 ```
 
-Anders sieht es aber aus, wenn der Closure-Parameter in der Methode ein *Escaping-Closure* wäre und in `Canvas` gespeichert wird:
+Anders sieht es aber aus, wenn der Closure-Parameter in der Methode ein *Escaping-Closure* ist und in `Canvas` gespeichert wird:
 
 ```swift
 class Image {}
