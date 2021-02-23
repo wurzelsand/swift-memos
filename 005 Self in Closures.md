@@ -96,3 +96,96 @@ do {
 }
 dispatchGroup.wait()
 ```
+
+Manchmal erkennt man nicht auf den ersten Blick, dass ein Objekt eine Referenz auf ein Closure speichert. Bei [SwiftBySundell](https://www.swiftbysundell.com/clips/6/) bin ich z. B. auf so etwas gestoßen:
+
+```swift
+class CanvasViewController {
+    private var canvas = Canvas()
+    private lazy var previewImageView = ImageView()
+    
+    func renderPreviewImage() {
+        canvas.renderAsImage { [weak self] image in
+            self?.previewImageView.image = image
+        }
+    }
+}
+```
+
+Wieso sollte hier `weak` notwendig sein? Schließlich speichert `canvas` nicht das Closure sondern übergibt es nur einem seiner Methoden als Parameter. Und tatsächlich ergibt sich nicht zwangsweise ein Retain-Cycle, `deinit` würde also auch ohne `weak` aufgerufen werden:
+
+```swift
+class Image {}
+
+class ImageView {
+    var image = Image()
+}
+
+class Canvas {
+    private var image = Image()
+    
+    func renderAsImage(render: @escaping (Image) -> Void) {
+        render(image)
+    }
+}
+
+class CanvasViewController {
+    private var canvas = Canvas()
+    private lazy var previewImageView = ImageView()
+    
+    func renderPreviewImage() {
+        canvas.renderAsImage { image in
+            self.previewImageView.image = image
+        }
+    }
+    
+    deinit {
+        print("deinit")
+    }
+}
+
+do {
+    let canvasViewController = CanvasViewController()
+    canvasViewController.renderPreviewImage()
+}
+```
+
+Anders sieht es aber aus, wenn der Closure-Parameter in der Methode ein *Escaping-Closure* wäre und in `Canvas` gespeichert wird:
+
+```swift
+class Image {}
+
+class ImageView {
+    var image = Image()
+}
+
+class Canvas {
+    private var image = Image()
+    var renderFunction: (Image) -> Void = { _ in }
+    
+    func renderAsImage(render: @escaping (Image) -> Void) {
+        renderFunction = render
+        render(image)
+    }
+}
+
+class CanvasViewController {
+    private var canvas = Canvas()
+    private lazy var previewImageView = ImageView()
+    
+    func renderPreviewImage() {
+        canvas.renderAsImage { [weak self] image in
+            self?.previewImageView.image = image
+        }
+    }
+    
+    deinit {
+        print("deinit")
+    }
+}
+
+do {
+    let canvasViewController = CanvasViewController()
+    canvasViewController.renderPreviewImage()
+}
+```
