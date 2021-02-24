@@ -124,4 +124,4 @@ do {
 Diskussion:
 
 1. `AnyObject` bewirkt, dass nur Klassen, also keine *Structs*, das Interface implementieren können. Warum? Siehe 2.
-2. *Delegates* sollten *weak* sein. Nur Klassen können `weak` sein.
+2. *Delegates* sollten *weak* sein. Nur Instanzen von Klassen können `weak` sein.
