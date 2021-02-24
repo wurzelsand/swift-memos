@@ -3,6 +3,10 @@
 ### Aufgabe
 
 ```swift
+struct Observation {
+    ...
+}
+
 struct Database {
     var values = [1, 2, 3, 4]
 }
@@ -29,11 +33,11 @@ struct Observation {
     var reducer: (Database) -> [Int]
     
     static func tracking(reducer: @escaping (Database) -> [Int]) -> Self {
-        Self(reducer: reducer)
+        Self.init(reducer: reducer)
     }
     
     func publisher(in database: Database) -> () -> Void {
-        { () -> Void in
+        {
             reducer(database).forEach {
                 print($0)
             }
