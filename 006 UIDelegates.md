@@ -11,22 +11,24 @@ class MyCollectionViewController: UICollectionViewController, UICollectionViewDe
 Gegeben sind eine UI-Klasse und sein Delegate-Protokoll:
 
 ```swift
-protocol UIObjectDelegate: AnyObject {
-    func objectChanged(_ object: UIObject, to newValue: Int)
-    func objectWillAppear(_ object: UIObject)
-    func objectMoved(_ object: UIObject)
-}
-
 class UIObject {
     weak var delegate: UIObjectDelegate?
     
     var x = 42 ...
     
-    func move() ... 
+    func move() {
+        ...
+    }
+}
+
+protocol UIObjectDelegate: AnyObject {
+    func objectChanged(_ object: UIObject, to newValue: Int)
+    func objectWillAppear(_ object: UIObject)
+    func objectMoved(_ object: UIObject)
 }
 ```
 
-Wir leiten eine Klasse ab und deklarieren sie als Delegate. Das Delegate-Protokoll besteht aus 3 Methoden. Wir implementieren aber hier nur zwei davon:
+Wir leiten eine eigene Klasse von `UIObject` ab und deklarieren sie als Delegate. Das Delegate-Protokoll besteht aus 3 Methoden. Wir implementieren aber hier nur zwei davon:
 
 ```swift
 class Object: UIObject, UIObjectDelegate {
