@@ -190,4 +190,4 @@ do {
 }
 ```
 
-Wenn wir also eine Methode einer Instanzvariablen unserer Klasse aufrufen und ihr ein Closure als Parameter übergeben, das `self` enthält, muss dieses `self` entweder `weak` oder `unowned` sein.
+Wenn wir also eine Methode einer Instanzvariablen unserer Klasse aufrufen und ihr ein Closure, das eine Referenz auf `self` enthält, als Parameter übergeben, muss dieses `self` entweder `weak` oder `unowned` sein.
