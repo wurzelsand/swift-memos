@@ -124,7 +124,7 @@ class ImageView {
 class Canvas {
     private var image = Image()
     
-    func renderAsImage(render: @escaping (Image) -> Void) {
+    func renderAsImage(render: @escaping (Image) -> Void) { // escaping not necessary here
         render(image)
     }
 }
