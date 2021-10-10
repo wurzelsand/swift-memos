@@ -97,6 +97,8 @@ do {
 dispatchGroup.wait()
 ```
 
+### Retain Cycle versteckt I
+
 Manchmal erkennt man nicht auf den ersten Blick, dass ein Objekt eine Referenz auf ein Closure speichert. Bei [SwiftBySundell](https://www.swiftbysundell.com/clips/6/) bin ich z. B. auf so etwas gestoßen:
 
 ```swift
@@ -191,3 +193,82 @@ do {
 ```
 
 Wenn wir also eine Methode einer Instanzvariablen unserer Klasse aufrufen und ihr ein Closure, das eine Referenz auf `self` enthält, als Parameter übergeben, muss dieses `self` entweder `weak` oder `unowned` sein.
+
+### Retain Cycle versteckt II
+
+Auch hier kann es sein, dass man den *Retain Cycle* übersieht:
+
+```swift
+class Cupboard {
+    var drawer = Drawer()
+    let color: String
+    
+    init(color: String) {
+        self.color = color
+        print("+ Cupboard")
+    }
+    
+    deinit {
+        print("- Cupboard")
+    }
+}
+
+class Drawer {
+    var logger: () -> Void = {}
+    
+    init() {
+        print("+ Drawer")
+    }
+    
+    deinit {
+        print("- Drawer")
+    }
+}
+
+func makeDrawer(for cupboard: Cupboard) -> Drawer {
+    let drawer = Drawer()
+    drawer.logger = {
+        print("I am a drawer of a cupboard in", cupboard.color)
+    }
+    return drawer
+}
+
+do {
+    let cupboard = Cupboard(color: "brown")
+    cupboard.drawer = makeDrawer(for: cupboard)
+    cupboard.drawer.logger()
+}
+```
+
+**Ausgabe:**
+
+```
++ Drawer
++ Cupboard
++ Drawer
+- Drawer
+I am a drawer of a cupboard in brown
+```
+
+Sowohl ein `Drawer` als auch ein `Cupboard` werden nicht wieder frei gegeben.
+
+Daher:
+
+```swift
+...
+drawer.logger = { [unowned cupboard] in
+    print("I am a drawer of a cupboard in", cupboard.color)
+}
+```
+
+**Ausgabe:**
+
+```
++ Drawer
++ Cupboard
++ Drawer
+- Drawer
+I am a drawer of a cupboard in brown
+- Cupboard
+- Drawer
+```
